@@ -1,7 +1,6 @@
 package client;
 
 import config.ServiceConfig;
-import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
