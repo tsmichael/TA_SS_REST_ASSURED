@@ -7,38 +7,33 @@ public class EndpointBuilder {
         this.endpoint = "/api/library";
     }
 
-    public EndpointBuilder pathId(String id) {
-        this.endpoint += "/" + id;
+    public EndpointBuilder pathParameter(String param) {
+        this.endpoint += "/" + param;
         return this;
     }
 
-    public EndpointBuilder pathId(int id) {
-        return this.pathId(String.valueOf(id));
+    public EndpointBuilder pathParameter(int param) {
+        return this.pathParameter(String.valueOf(param));
     }
 
-    public EndpointBuilder genrePath() {
-        this.endpoint += "/genre";
+    public EndpointBuilder queryParam(String param, String value) {
+        String delimiter;
+        if (this.endpoint.contains("?")) delimiter = "&";
+        else delimiter = "?";
+        this.endpoint += delimiter + param + "=" + value;
         return this;
     }
 
-    public EndpointBuilder genresPath() {
-        this.endpoint += "/genres";
-        return this;
+    public EndpointBuilder queryParam(String param, int value) {
+        return this.queryParam(param, String.valueOf(value));
     }
 
-    public EndpointBuilder size(int size) {
-        this.addParam("size", String.valueOf(size));
-        return this;
+    public EndpointBuilder queryParam(String param, boolean value) {
+        return this.queryParam(param, String.valueOf(value));
     }
 
     public String get() {
         return this.endpoint;
     }
 
-    private void addParam(String param, String value) {
-        String delimiter;
-        if (this.endpoint.contains("?")) delimiter = "&";
-        else delimiter = "?";
-        this.endpoint += delimiter + param + "=" + value;
-    }
 }
