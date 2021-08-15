@@ -1,5 +1,7 @@
 package utils;
 
+import constants.ApiEndpoint;
+
 public class EndpointBuilder {
     private String endpoint;
 
@@ -10,6 +12,10 @@ public class EndpointBuilder {
     public EndpointBuilder pathParameter(String param) {
         this.endpoint += "/" + param;
         return this;
+    }
+
+    public EndpointBuilder pathParameter(ApiEndpoint param) {
+        return this.pathParameter(String.valueOf(param));
     }
 
     public EndpointBuilder pathParameter(int param) {
