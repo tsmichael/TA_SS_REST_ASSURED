@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="Regression">
+    <test name="TestAuthorService">
+        <classes>
+            <class name="AuthorServiceTest">
+            </class>
+        </classes>
+    </test>
+    <test name="TestGenreService">
+        <classes>
+            <class name="GenreServiceTest">
+            </class>
+        </classes>
+    </test>
+    <test name="TestBookService">
+        <classes>
+            <class name="BookServiceTest">
+            </class>
+        </classes>
+    </test>
+    <test name="TestComplicatedServiceCalls">
+        <groups>
+            <run>
+                <include name="AuthorTest"/>
+                <include name="GenreTest"/>
+                <include name="BookTest"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="ComplicatedServiceTest">
+            </class>
+        </classes>
+    </test>
+</suite>
