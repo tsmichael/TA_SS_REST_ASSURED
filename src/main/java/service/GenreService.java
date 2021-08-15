@@ -1,31 +1,89 @@
 package service;
 
 import client.HttpClient;
+import constants.ApiEndpoint;
 import entity.ListOptions;
+import io.qameta.allure.Step;
+import org.apache.log4j.Logger;
 import response.BaseResponse;
 import utils.EndpointBuilder;
+import utils.JsonReader;
 
 public class GenreService {
 
-    public BaseResponse getGenre(int genreId) {
-        String endpoint = new EndpointBuilder().pathParameter("genre").pathParameter(genreId).get();
-        return HttpClient.get(endpoint);
+    private static final Logger LOG = Logger.getLogger(GenreService.class);
+
+    private JsonReader jsonReader = new JsonReader();
+
+    @Step("Create Genre")
+    public BaseResponse<Object> createGenre(Object genre) {
+        String endpoint = new EndpointBuilder().pathParameter(ApiEndpoint.GENRE).get();
+        LOG.info("Endpoint CALL : " + endpoint);
+        return new BaseResponse<>(HttpClient.post(endpoint, jsonReader.objectToJson(genre)), Object.class);
     }
 
-    public BaseResponse getGenres(ListOptions options) {
-        EndpointBuilder endpoint = new EndpointBuilder().pathParameter("genres");
+    @Step("Update Genre")
+    public BaseResponse<Object> updateGenre(Object genre) {
+        String endpoint = new EndpointBuilder().pathParameter(ApiEndpoint.GENRE).get();
+        LOG.info("Endpoint CALL : " + endpoint);
+        return new BaseResponse<>(HttpClient.put(endpoint, jsonReader.objectToJson(genre)), Object.class);
+    }
+
+    @Step("Get Genre by genreId")
+    public BaseResponse<Object> getGenre(int genreId) {
+        String endpoint = new EndpointBuilder().pathParameter(ApiEndpoint.GENRE).pathParameter(genreId).get();
+        LOG.info("Endpoint CALL : " + endpoint);
+        return new BaseResponse<>(HttpClient.get(endpoint), Object.class);
+    }
+
+    @Step("Get List of Genres")
+    public BaseResponse<Object> getGenres(ListOptions options) {
+        EndpointBuilder endpoint = new EndpointBuilder().pathParameter(ApiEndpoint.GENRES);
         if (options.orderType != null) endpoint.queryParam("orderType", options.orderType);
         endpoint
-            .queryParam("page", options.page)
-            .queryParam("pagination", options.pagination)
-            .queryParam("size", options.size);
+                .queryParam("page", options.page)
+                .queryParam("pagination", options.pagination)
+                .queryParam("size", options.size);
         if (options.sortBy != null) endpoint.queryParam("sortBy", options.sortBy);
-        return HttpClient.get(endpoint.get());
+        LOG.info("Endpoint CALL : " + endpoint.get());
+        return new BaseResponse<>(HttpClient.get(endpoint.get()), Object.class);
     }
 
-    // TODO properly handle genre entity
-    public BaseResponse createGenre(Object genre) {
-        String endpoint = new EndpointBuilder().pathParameter("genre").get();
-        return HttpClient.post(endpoint, genre.toString());
+    @Step("Get Genres with name which contain '{0}'")
+    public BaseResponse<Object> getGenresByName(String name) {
+        EndpointBuilder endpoint = new EndpointBuilder().pathParameter(ApiEndpoint.GENRES).pathParameter(ApiEndpoint.SEARCH);
+        endpoint
+                .queryParam("query", name);
+        LOG.info("Endpoint CALL : " + endpoint.get());
+        return new BaseResponse<>(HttpClient.get(endpoint.get()), Object.class);
     }
+
+    @Step("Get Genres list of Author by authorId")
+    public BaseResponse<Object> getGenresOfAuthorByAuthorId(int authorId) {
+        EndpointBuilder endpoint = new EndpointBuilder()
+                .pathParameter(ApiEndpoint.AUTHOR)
+                .pathParameter(authorId)
+                .pathParameter(ApiEndpoint.GENRES);
+        LOG.info("Endpoint CALL : " + endpoint.get());
+        return new BaseResponse<>(HttpClient.get(endpoint.get()), Object.class);
+    }
+
+    @Step("Get Genre of Book by bookId")
+    public BaseResponse<Object> getGenreOfBookByBookId(int bookId) {
+        EndpointBuilder endpoint = new EndpointBuilder()
+                .pathParameter(ApiEndpoint.BOOK)
+                .pathParameter(bookId)
+                .pathParameter(ApiEndpoint.GENRE);
+        LOG.info("Endpoint CALL : " + endpoint.get());
+        return new BaseResponse<>(HttpClient.get(endpoint.get()), Object.class);
+    }
+
+    @Step("Delete Genre")
+    public BaseResponse<Object> deleteGenre(int genreId) {
+        String endpoint = new EndpointBuilder().pathParameter(ApiEndpoint.GENRE).pathParameter(genreId).get();
+        LOG.info("Endpoint CALL : " + endpoint);
+        return new BaseResponse<>(HttpClient.delete(endpoint), Object.class);
+    }
+
+
 }
